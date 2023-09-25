@@ -9,7 +9,7 @@ class Restaurant(db.Model):
     restaurant_pizzas = db.relationship('RestaurantPizza', back_populates='restaurant')
 
     @validates('name')
-    def validate_name(self, key, value):
+    def validate_name(self, key, value): 
         if len(value.strip()) > 50:
             raise ValueError("Restaurant name must not be more than 50 words.")
         return value

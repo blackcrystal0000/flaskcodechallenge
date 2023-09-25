@@ -1,16 +1,17 @@
 from flask import Flask, jsonify, request, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from models import Restaurant, Pizza, RestaurantPizza
 from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///pizza_restaurant.db' 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///pizza_restaurant.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
 migrate = Migrate(app, db)
+
+# import models after defining db
+from models import Restaurant, Pizza, RestaurantPizza
 
 # Define your routes here
 @app.route('/restaurants', methods=['GET'])
@@ -106,19 +107,6 @@ def create_restaurant_pizza():
         'ingredients': pizza.ingredients
     }), 201
 
+
 if __name__ == '__main__':
-    db.create_all()
-    
-    restaurant1 = Restaurant(name="Dominion Pizza", address="Good Italian, Ngong Road, 5th Avenue")
-    restaurant2 = Restaurant(name="Pizza Hut", address="Westgate Mall, Mwanzi Road, Nrb 100")
-
-    pizza1 = Pizza(name="Cheese", ingredients="Dough, Tomato Sauce, Cheese")
-    pizza2 = Pizza(name="Pepperoni", ingredients="Dough, Tomato Sauce, Cheese, Pepperoni")
-
-    restaurant_pizza1 = RestaurantPizza(price=5, pizza=pizza1, restaurant=restaurant1)
-    restaurant_pizza2 = RestaurantPizza(price=7, pizza=pizza2, restaurant=restaurant1)
-
-    db.session.add_all([restaurant1, restaurant2, pizza1, pizza2, restaurant_pizza1, restaurant_pizza2])
-    db.session.commit()
-    
     app.run(port=5555)
