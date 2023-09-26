@@ -1,5 +1,9 @@
 from app import db, app
 from models import Restaurant, Pizza, RestaurantPizza
+from faker import Faker
+import random
+
+from random import randint
 
 with app.app_context():
     db.create_all()
